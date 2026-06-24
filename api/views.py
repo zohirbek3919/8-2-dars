@@ -1,73 +1,53 @@
 from rest_framework.views import APIView
-from django.forms import model_to_dict
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 
 from .models import Company, Bino
+from .serializers import CompanySerializer, BinoSerializer
+
 
 class CompanyApiView(APIView):
     def get(self, request, pk: int = None):
         if not pk:
             companys = Company.objects.all()
-            companys_list = []
-            for company in companys:
-                companys_list.append(
-                    {
-                        'id': company.pk,
-                        'name': company.name
-                    }
-                )
-
-            return Response(companys_list)
+            serializer = CompanySerializer(companys, many=True)
+            return Response(serializer.data)
         else:
             company = Company.objects.get(pk=pk)
-            return Response(model_to_dict(company))
+            serializer = CompanySerializer(company)
+            return Response(serializer.data)
 
-    def post(self, request:Request, pk: int = None):
+    def post(self, request: Request, pk: int = None):
         if not pk:
-            name = request.data.get("name", None)
-            if name:
-                company = Company.objects.create(name=name)
-                return Response(model_to_dict(company), status=status.HTTP_201_CREATED)
-            return Response({"message": "Xato!!!"}, status=status.HTTP_400_BAD_REQUEST)
+            serializer = CompanySerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({"message": "Method not allowed!"}, 
+            return Response({"message": "Method not allowed!"},
                             status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
 class BinoApiView(APIView):
     def get(self, request, pk: int = None):
         if not pk:
             binos = Bino.objects.all()
-            binos_list = []
-            for bino in binos:
-                binos_list.append(
-                    {
-                        'id': bino.pk,
-                        'name': bino.name,
-                        'qavat': bino.qavat,
-                        'manzil': bino.manzil,
-                        'company_id': bino.company.id
-
-                    }
-                )
-
-            return Response(binos_list)
+            serializer = BinoSerializer(binos, many=True)
+            return Response(serializer.data)
         else:
             bino = Bino.objects.get(pk=pk)
-            return Response(model_to_dict(bino))
+            serializer = BinoSerializer(bino)
+            return Response(serializer.data)
 
-    def post(self, request:Request, pk: int = None):
+    def post(self, request: Request, pk: int = None):
         if not pk:
-            name = request.data.get("name", None)
-            qavat = request.data.get("qavat", None)
-            manzil = request.data.get("manzil", None)
-            company_id = request.data.get("company_id", None)
-
-            if name and qavat and manzil and company_id:
-                bino = Bino.objects.create(**request.data)
-                return Response(model_to_dict(bino), status=status.HTTP_201_CREATED)
-            return Response({"message": "Xato!!!"}, status=status.HTTP_400_BAD_REQUEST)
+            serializer = BinoSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({"message": "Method not allowed!"}, 
+            return Response({"message": "Method not allowed!"},
                             status=status.HTTP_405_METHOD_NOT_ALLOWED)
