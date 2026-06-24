@@ -4,72 +4,70 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 
-from .models import Course, Student
+from .models import Company, Bino
 
-class CourseApiView(APIView):
+class CompanyApiView(APIView):
     def get(self, request, pk: int = None):
         if not pk:
-            courses = Course.objects.all()
-            courses_list = []
-            for course in courses:
-                courses_list.append(
+            companys = Company.objects.all()
+            companys_list = []
+            for company in companys:
+                companys_list.append(
                     {
-                        'id': course.pk,
-                        'name': course.name
+                        'id': company.pk,
+                        'name': company.name
                     }
                 )
 
-            return Response(courses_list)
+            return Response(companys_list)
         else:
-            course = Course.objects.get(pk=pk)
-            return Response(model_to_dict(course))
+            company = Company.objects.get(pk=pk)
+            return Response(model_to_dict(company))
 
     def post(self, request:Request, pk: int = None):
         if not pk:
             name = request.data.get("name", None)
             if name:
-                course = Course.objects.create(name=name)
-                return Response(model_to_dict(course), status=status.HTTP_201_CREATED)
+                company = Company.objects.create(name=name)
+                return Response(model_to_dict(company), status=status.HTTP_201_CREATED)
             return Response({"message": "Xato!!!"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"message": "Method not allowed!"}, 
                             status=status.HTTP_405_METHOD_NOT_ALLOWED)
-class StudentApiView(APIView):
+
+class BinoApiView(APIView):
     def get(self, request, pk: int = None):
         if not pk:
-            students = Student.objects.all()
-            students_list = []
-            for student in students:
-                students_list.append(
+            binos = Bino.objects.all()
+            binos_list = []
+            for bino in binos:
+                binos_list.append(
                     {
-                        'id': student.pk,
-                        'name': student.name,
-                        'age': student.age,
-                        'hudud': student.hudud,
-                        'category_id': student.category.id
+                        'id': bino.pk,
+                        'name': bino.name,
+                        'qavat': bino.qavat,
+                        'manzil': bino.manzil,
+                        'company_id': bino.company.id
 
                     }
                 )
 
-            return Response(students_list)
+            return Response(binos_list)
         else:
-            student = Student.objects.get(pk=pk)
-            return Response(model_to_dict(student))
+            bino = Bino.objects.get(pk=pk)
+            return Response(model_to_dict(bino))
 
     def post(self, request:Request, pk: int = None):
         if not pk:
             name = request.data.get("name", None)
-            age = request.data.get("age", None)
-            hudud = request.data.get("hudud", None)
-            category_id = request.data.get("category_id", None)
+            qavat = request.data.get("qavat", None)
+            manzil = request.data.get("manzil", None)
+            company_id = request.data.get("company_id", None)
 
-
-
-            if name and age and hudud and category_id:
-                student = Student.objects.create(**request.data)
-                return Response(model_to_dict(student), status=status.HTTP_201_CREATED)
+            if name and qavat and manzil and company_id:
+                bino = Bino.objects.create(**request.data)
+                return Response(model_to_dict(bino), status=status.HTTP_201_CREATED)
             return Response({"message": "Xato!!!"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"message": "Method not allowed!"}, 
                             status=status.HTTP_405_METHOD_NOT_ALLOWED)
-

@@ -1,11 +1,11 @@
 from django.urls import path
-from .views import CourseApiView, StudentApiView
+from .views import CompanyApiView, BinoApiView
 
 urlpatterns = [
-    path('courses/', CourseApiView.as_view()),
-    path('courses/<int:pk>/', CourseApiView.as_view()),
+    path('companys/', CompanyApiView.as_view()),
+    path('companys/<int:pk>/', CompanyApiView.as_view()),
 
-    path('students/', StudentApiView.as_view()),
-    path('students/<int:pk>/', StudentApiView.as_view()),
+    path('binos/', BinoApiView.as_view()),
+    path('binos/<int:pk>/', BinoApiView.as_view()),
 
 ]

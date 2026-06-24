@@ -14,20 +14,20 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Course',
+            name='Company',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=255, unique=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Student',
+            name='Bino',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=255)),
-                ('age', models.PositiveIntegerField(blank=True, null=True, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(100)])),
-                ('hudud', models.CharField(max_length=255)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.course')),
+                ('qavat', models.PositiveIntegerField(blank=True, null=True, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(100)])),
+                ('manzil', models.CharField(max_length=255)),
+                ('company', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.company')),
             ],
         ),
     ]
